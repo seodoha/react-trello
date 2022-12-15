@@ -60,14 +60,14 @@ const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
     }
     body {
-        display: flex;
+        /* display: flex;
         align-items: center;
         justify-content: center;
-        padding-top: 50px;
+        padding-top: 50px; */
         background-color: ${(props) => props.theme.bgColor};
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 300;
-        color: ${(props) => props.theme.textColor};
+        color: black
         line-height: 1.2;
     }
     a {
@@ -77,12 +77,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 root.render(
-    <React.StrictMode>
-        <RecoilRoot>
-            <ThemeProvider theme={darkTheme}>
-                <GlobalStyle />
-                <App />
-            </ThemeProvider>
-        </RecoilRoot>
-    </React.StrictMode>
+    // <React.StrictMode>
+    <RecoilRoot>
+        <ThemeProvider theme={darkTheme}>
+            <GlobalStyle />
+            <App />
+        </ThemeProvider>
+    </RecoilRoot>
+    // </React.StrictMode>
 );
