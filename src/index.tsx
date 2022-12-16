@@ -67,7 +67,7 @@ const GlobalStyle = createGlobalStyle`
         background-color: ${(props) => props.theme.bgColor};
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 300;
-        color: black
+        color: black;
         line-height: 1.2;
     }
     a {
