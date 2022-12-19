@@ -1,8 +1,10 @@
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { toDoState } from "./atoms";
 import { useRecoilState } from "recoil";
 import Board from "./components/Board";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
     display: flex;
@@ -25,7 +27,7 @@ function App() {
     const [toDos, setToDos] = useRecoilState(toDoState);
     const onDragEnd = (info: DropResult) => {
         const { destination, draggableId, source } = info;
-
+        console.log("🚀 ~ file: App.tsx:30 ~ onDragEnd ~ info", info);
         if (!destination) return;
 
         if (destination?.droppableId === source.droppableId) {

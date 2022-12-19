@@ -4,6 +4,8 @@ import DragabbleCard from "./DragabbleCard";
 import { useForm } from "react-hook-form";
 import { ITodo, toDoState } from "./../atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
     display: flex;
@@ -42,9 +44,11 @@ const Form = styled.form`
 const Input = styled.input`
     width: 100%;
     height: 40px;
+    padding: 0 10px;
     border: none;
     border-bottom: 1px solid black;
     background-color: transparent;
+    outline: none;
 `;
 
 interface IBoardProps {
@@ -87,10 +91,28 @@ function Board({ toDos, boardId }: IBoardProps) {
                         {...magic.droppableProps}
                     >
                         {toDos.map((todo, index) => (
-                            <DragabbleCard key={todo.id} toDoId={todo.id} toDoText={todo.text} index={index} />
+                            <DragabbleCard key={todo.id} toDoId={todo.id} toDoText={todo.text} index={index} boardId={boardId} />
                         ))}
                         {magic.placeholder}
                     </Area>
+                )}
+            </Droppable>
+            <Droppable droppableId="delete">
+                {(magic, info) => (
+                    <div
+                        style={{
+                            position: "fixed",
+                            right: 0,
+                            top: 0,
+                            width: "200px",
+                            height: "200px",
+                            backgroundColor: "blanchedalmond",
+                        }}
+                        ref={magic.innerRef}
+                        {...magic.droppableProps}
+                    >
+                        test
+                    </div>
                 )}
             </Droppable>
         </Wrapper>
