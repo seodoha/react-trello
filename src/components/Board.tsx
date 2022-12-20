@@ -1,15 +1,14 @@
-import { Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import DragabbleCard from "./DragabbleCard";
 import { useForm } from "react-hook-form";
-import { ITodo, toDoState } from "./../atoms";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { ITodo, todoBoard } from "./../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
+    flex-shrink: 0;
     width: 300px;
     min-height: 300px;
     padding: 10px 0 0;
@@ -61,7 +60,7 @@ interface IForm {
 }
 
 function Board({ toDos, boardId }: IBoardProps) {
-    const setToDos = useSetRecoilState(toDoState);
+    const setToDos = useSetRecoilState(todoBoard);
     const { register, setValue, handleSubmit } = useForm<IForm>();
     const onValid = ({ toDo }: IForm) => {
         const newToDo = {
@@ -95,24 +94,6 @@ function Board({ toDos, boardId }: IBoardProps) {
                         ))}
                         {magic.placeholder}
                     </Area>
-                )}
-            </Droppable>
-            <Droppable droppableId="delete">
-                {(magic, info) => (
-                    <div
-                        style={{
-                            position: "fixed",
-                            right: 0,
-                            top: 0,
-                            width: "200px",
-                            height: "200px",
-                            backgroundColor: "blanchedalmond",
-                        }}
-                        ref={magic.innerRef}
-                        {...magic.droppableProps}
-                    >
-                        test
-                    </div>
                 )}
             </Droppable>
         </Wrapper>

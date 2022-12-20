@@ -1,34 +1,47 @@
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { toDoState } from "./atoms";
+import { todoBoard } from "./atoms";
 import { useRecoilState } from "recoil";
 import Board from "./components/Board";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import AddBoard from "./components/AddBoard";
+import Trash from "./components/Trash";
 
 const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 20px;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0 auto;
+    padding: 50px 20px;
 `;
 
 const Boards = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
     gap: 10px;
     width: 100%;
 `;
 
 function App() {
-    const [toDos, setToDos] = useRecoilState(toDoState);
+    const [toDos, setToDos] = useRecoilState(todoBoard);
+
     const onDragEnd = (info: DropResult) => {
         const { destination, draggableId, source } = info;
-        console.log("🚀 ~ file: App.tsx:30 ~ onDragEnd ~ info", info);
         if (!destination) return;
+
+        if (destination.droppableId === "delete") {
+            return setToDos((allBoards) => {
+                return {
+                    ...allBoards,
+                    [source.droppableId]: [
+                        ...allBoards[source.droppableId].slice(0, source.index),
+                        ...allBoards[source.droppableId].slice(source.index + 1),
+                    ],
+                };
+            });
+        }
 
         if (destination?.droppableId === source.droppableId) {
             setToDos((allBoards) => {
@@ -58,13 +71,27 @@ function App() {
             });
         }
     };
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
+                <AddBoard />
                 <Boards>
-                    {Object.keys(toDos).map((boardId) => (
+                    {/* <Droppable droppableId="he">
+                        {(provided, snapshot) => (
+                            <>
+                                {Object.keys(toDos).map((boardId: string) => (
+                                    <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
+                                ))}
+                            </>
+                        )}
+                    </Droppable> */}
+
+                    {Object.keys(toDos).map((boardId: string) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
+
+                    <Trash />
                 </Boards>
             </Wrapper>
         </DragDropContext>

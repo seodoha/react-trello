@@ -15,12 +15,8 @@ const { persistAtom } = recoilPersist({
     storage: localStorage,
 });
 
-export const toDoState = atom<IToDoState>({
-    key: "toDo",
-    default: {
-        "To Do": [],
-        Doing: [],
-        Done: [],
-    },
+export const todoBoard = atom<IToDoState>({
+    key: "board",
+    default: {},
     effects_UNSTABLE: [persistAtom],
 });

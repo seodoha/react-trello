@@ -2,7 +2,7 @@ import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import React from "react";
 import { useSetRecoilState } from "recoil";
-import { toDoState } from "../atoms";
+import { todoBoard } from "../atoms";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
@@ -31,7 +31,7 @@ interface IDragabbleCardProps {
 }
 
 function DragabbleCard({ toDoId, toDoText, index, boardId }: IDragabbleCardProps) {
-    const setToDos = useSetRecoilState(toDoState);
+    const setToDos = useSetRecoilState(todoBoard);
     const onDelete = () => {
         setToDos((allBoards) => {
             return {
