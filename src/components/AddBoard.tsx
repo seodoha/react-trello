@@ -49,11 +49,11 @@ function AddBoard() {
             alert("Board명은 필수 입력입니다.");
             return;
         }
-
+        boardName += `_${Date.now()}`;
         setBoard((allBoard) => {
             return {
-                ...allBoard,
                 [boardName]: [],
+                ...allBoard,
             };
         });
 

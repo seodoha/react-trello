@@ -75,28 +75,34 @@ function Board({ toDos, boardId }: IBoardProps) {
         });
         setValue("toDo", "");
     };
+    // console.log(toDos);
+
     return (
-        <Wrapper>
-            <Title>{boardId}</Title>
-            <Form onSubmit={handleSubmit(onValid)}>
-                <Input type="text" placeholder={`Add task on ${boardId}`} {...register("toDo", { required: true })} />
-            </Form>
-            <Droppable droppableId={boardId}>
-                {(magic, info) => (
-                    <Area
-                        isDraggingOver={info.isDraggingOver}
-                        isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-                        ref={magic.innerRef}
-                        {...magic.droppableProps}
-                    >
-                        {toDos.map((todo, index) => (
-                            <DragabbleCard key={todo.id} toDoId={todo.id} toDoText={todo.text} index={index} boardId={boardId} />
-                        ))}
-                        {magic.placeholder}
-                    </Area>
-                )}
-            </Droppable>
-        </Wrapper>
+        <Draggable draggableId={boardId.split("_")[0]} index={Number(boardId.split("_")[1])}>
+            {(provided, snapshot) => (
+                <Wrapper ref={provided.innerRef} {...provided.draggableProps}>
+                    <Title {...provided.dragHandleProps}>{boardId.split("_")[0]}</Title>
+                    <Form onSubmit={handleSubmit(onValid)}>
+                        <Input type="text" placeholder={`Add task on ${boardId.split("_")[0]}`} {...register("toDo", { required: true })} />
+                    </Form>
+                    <Droppable droppableId={boardId}>
+                        {(magic, info) => (
+                            <Area
+                                isDraggingOver={info.isDraggingOver}
+                                isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                                ref={magic.innerRef}
+                                {...magic.droppableProps}
+                            >
+                                {toDos.map((todo, index) => (
+                                    <DragabbleCard key={todo.id} toDoId={todo.id} toDoText={todo.text} index={index} boardId={boardId} />
+                                ))}
+                                {magic.placeholder}
+                            </Area>
+                        )}
+                    </Droppable>
+                </Wrapper>
+            )}
+        </Draggable>
     );
 }
 

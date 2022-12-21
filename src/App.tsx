@@ -28,71 +28,79 @@ function App() {
     const [toDos, setToDos] = useRecoilState(todoBoard);
 
     const onDragEnd = (info: DropResult) => {
-        const { destination, draggableId, source } = info;
+        const { destination, draggableId, source, type } = info;
         if (!destination) return;
+        console.log(info);
 
-        if (destination.droppableId === "delete") {
-            return setToDos((allBoards) => {
-                return {
-                    ...allBoards,
-                    [source.droppableId]: [
-                        ...allBoards[source.droppableId].slice(0, source.index),
-                        ...allBoards[source.droppableId].slice(source.index + 1),
-                    ],
-                };
-            });
+        if (type === "COLUMN") {
         }
 
-        if (destination?.droppableId === source.droppableId) {
-            setToDos((allBoards) => {
-                const boardCopy = [...allBoards[source.droppableId]];
-                const taskObj = boardCopy[source.index];
-                boardCopy.splice(source.index, 1);
-                boardCopy.splice(destination.index, 0, taskObj);
-                return {
-                    ...allBoards,
-                    [source.droppableId]: boardCopy,
-                };
-            });
-        }
+        if (type === "DEFAULT") {
+            if (destination.droppableId === "delete") {
+                return setToDos((allBoards) => {
+                    return {
+                        ...allBoards,
+                        [source.droppableId]: [
+                            ...allBoards[source.droppableId].slice(0, source.index),
+                            ...allBoards[source.droppableId].slice(source.index + 1),
+                        ],
+                    };
+                });
+            }
 
-        if (destination?.droppableId !== source.droppableId) {
-            setToDos((allBoards) => {
-                const sourceBoard = [...allBoards[source.droppableId]];
-                const taskObj = sourceBoard[source.index];
-                const destinationBoard = [...allBoards[destination.droppableId]];
-                sourceBoard.splice(source.index, 1);
-                destinationBoard.splice(destination.index, 0, taskObj);
-                return {
-                    ...allBoards,
-                    [source.droppableId]: sourceBoard,
-                    [destination.droppableId]: destinationBoard,
-                };
-            });
+            if (destination?.droppableId === source.droppableId) {
+                setToDos((allBoards) => {
+                    const boardCopy = [...allBoards[source.droppableId]];
+                    const taskObj = boardCopy[source.index];
+                    boardCopy.splice(source.index, 1);
+                    boardCopy.splice(destination.index, 0, taskObj);
+                    return {
+                        ...allBoards,
+                        [source.droppableId]: boardCopy,
+                    };
+                });
+            }
+
+            if (destination?.droppableId !== source.droppableId) {
+                setToDos((allBoards) => {
+                    const sourceBoard = [...allBoards[source.droppableId]];
+                    const taskObj = sourceBoard[source.index];
+                    const destinationBoard = [...allBoards[destination.droppableId]];
+                    sourceBoard.splice(source.index, 1);
+                    destinationBoard.splice(destination.index, 0, taskObj);
+                    return {
+                        ...allBoards,
+                        [source.droppableId]: sourceBoard,
+                        [destination.droppableId]: destinationBoard,
+                    };
+                });
+            }
         }
     };
+
+    console.log(toDos);
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
                 <AddBoard />
-                <Boards>
-                    {/* <Droppable droppableId="he">
-                        {(provided, snapshot) => (
-                            <>
-                                {Object.keys(toDos).map((boardId: string) => (
-                                    <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
-                                ))}
-                            </>
-                        )}
-                    </Droppable> */}
-
+                {/* <Boards>
                     {Object.keys(toDos).map((boardId: string) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
-
                     <Trash />
-                </Boards>
+                </Boards> */}
+                <Droppable droppableId="board" type="COLUMN" direction="horizontal">
+                    {(provided) => (
+                        <Boards ref={provided.innerRef} {...provided.droppableProps}>
+                            {Object.keys(toDos).map((boardId: string) => (
+                                <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
+                            ))}
+                            {provided.placeholder}
+                        </Boards>
+                    )}
+                </Droppable>
+                <Trash />
             </Wrapper>
         </DragDropContext>
     );
