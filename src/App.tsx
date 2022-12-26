@@ -27,45 +27,57 @@ function App() {
     const [toDos, setToDos] = useRecoilState(toDoState);
     const onDragEnd = (info: DropResult) => {
         const { destination, draggableId, source } = info;
-        console.log("🚀 ~ file: App.tsx:30 ~ onDragEnd ~ info", info);
         if (!destination) return;
 
-            if (destination?.droppableId === source.droppableId) {
-                setToDos((allBoards) => {
-                    const boardCopy = [...allBoards[source.droppableId]];
-                    const taskObj = boardCopy[source.index];
-                    boardCopy.splice(source.index, 1);
-                    boardCopy.splice(destination.index, 0, taskObj);
-                    return {
-                        ...allBoards,
-                        [source.droppableId]: boardCopy,
-                    };
-                });
-            }
+        if (destination.droppableId === "delete") {
+            return setToDos((allBoards) => {
+                return {
+                    ...allBoards,
+                    [source.droppableId]: [
+                        ...allBoards[source.droppableId].slice(0, source.index),
+                        ...allBoards[source.droppableId].slice(source.index + 1),
+                    ],
+                };
+            });
+        }
 
-            if (destination?.droppableId !== source.droppableId) {
-                setToDos((allBoards) => {
-                    const sourceBoard = [...allBoards[source.droppableId]];
-                    const taskObj = sourceBoard[source.index];
-                    const destinationBoard = [...allBoards[destination.droppableId]];
-                    sourceBoard.splice(source.index, 1);
-                    destinationBoard.splice(destination.index, 0, taskObj);
-                    return {
-                        ...allBoards,
-                        [source.droppableId]: sourceBoard,
-                        [destination.droppableId]: destinationBoard,
-                    };
-                });
-            }
+        if (destination?.droppableId === source.droppableId) {
+            setToDos((allBoards) => {
+                const boardCopy = [...allBoards[source.droppableId]];
+                const taskObj = boardCopy[source.index];
+                boardCopy.splice(source.index, 1);
+                boardCopy.splice(destination.index, 0, taskObj);
+                return {
+                    ...allBoards,
+                    [source.droppableId]: boardCopy,
+                };
+            });
+        }
+
+        if (destination?.droppableId !== source.droppableId) {
+            setToDos((allBoards) => {
+                const sourceBoard = [...allBoards[source.droppableId]];
+                const taskObj = sourceBoard[source.index];
+                const destinationBoard = [...allBoards[destination.droppableId]];
+                sourceBoard.splice(source.index, 1);
+                destinationBoard.splice(destination.index, 0, taskObj);
+                return {
+                    ...allBoards,
+                    [source.droppableId]: sourceBoard,
+                    [destination.droppableId]: destinationBoard,
+                };
+            });
         }
     };
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
                 <Boards>
-                    {Object.keys(toDos).map((boardId) => (
+                    {Object.keys(toDos).map((boardId: string) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
+
+                    {/* <Trash /> */}
                 </Boards>
             </Wrapper>
         </DragDropContext>

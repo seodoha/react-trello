@@ -76,8 +76,6 @@ function Board({ toDos, boardId }: IBoardProps) {
         });
         setValue("toDo", "");
     };
-    // console.log(toDos);
-
     return (
         <Wrapper>
             <Title>{boardId}</Title>
