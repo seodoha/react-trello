@@ -27,19 +27,8 @@ function App() {
     const [toDos, setToDos] = useRecoilState(toDoState);
     const onDragEnd = (info: DropResult) => {
         const { destination, draggableId, source } = info;
+        console.log("🚀 ~ file: App.tsx:30 ~ onDragEnd ~ info", info);
         if (!destination) return;
-
-        if (destination.droppableId === "delete") {
-            return setToDos((allBoards) => {
-                return {
-                    ...allBoards,
-                    [source.droppableId]: [
-                        ...allBoards[source.droppableId].slice(0, source.index),
-                        ...allBoards[source.droppableId].slice(source.index + 1),
-                    ],
-                };
-            });
-        }
 
             if (destination?.droppableId === source.droppableId) {
                 setToDos((allBoards) => {
@@ -70,27 +59,13 @@ function App() {
             }
         }
     };
-
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
-                <AddBoard />
                 <Boards>
-                    {/* <Droppable droppableId="he">
-                        {(provided, snapshot) => (
-                            <>
-                                {Object.keys(toDos).map((boardId: string) => (
-                                    <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
-                                ))}
-                            </>
-                        )}
-                    </Droppable> */}
-
-                    {Object.keys(toDos).map((boardId: string) => (
+                    {Object.keys(toDos).map((boardId) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
-
-                    <Trash />
                 </Boards>
             </Wrapper>
         </DragDropContext>
