@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import Board from "./components/Board";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import Trash from "./components/Trash";
 
 const Wrapper = styled.div`
     display: flex;
@@ -77,7 +78,7 @@ function App() {
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
 
-                    {/* <Trash /> */}
+                    <Trash />
                 </Boards>
             </Wrapper>
         </DragDropContext>

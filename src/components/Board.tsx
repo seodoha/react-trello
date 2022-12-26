@@ -97,24 +97,6 @@ function Board({ toDos, boardId }: IBoardProps) {
                     </Area>
                 )}
             </Droppable>
-            <Droppable droppableId="delete">
-                {(magic, info) => (
-                    <div
-                        style={{
-                            position: "fixed",
-                            right: 0,
-                            top: 0,
-                            width: "200px",
-                            height: "200px",
-                            backgroundColor: "blanchedalmond",
-                        }}
-                        ref={magic.innerRef}
-                        {...magic.droppableProps}
-                    >
-                        test
-                    </div>
-                )}
-            </Droppable>
         </Wrapper>
     );
 }
