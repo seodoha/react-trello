@@ -1,52 +1,45 @@
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { todoBoard } from "./atoms";
+import { toDoState } from "./atoms";
 import { useRecoilState } from "recoil";
 import Board from "./components/Board";
-import AddBoard from "./components/AddBoard";
-import Trash from "./components/Trash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    gap: 20px;
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     margin: 0 auto;
-    padding: 50px 20px;
 `;
 
 const Boards = styled.div`
     display: flex;
+    justify-content: center;
+    align-items: flex-start;
     gap: 10px;
     width: 100%;
 `;
 
 function App() {
-    const [toDos, setToDos] = useRecoilState(todoBoard);
-
+    const [toDos, setToDos] = useRecoilState(toDoState);
     const onDragEnd = (info: DropResult) => {
-        const { destination, draggableId, source, type } = info;
+        const { destination, draggableId, source } = info;
         if (!destination) return;
-        console.log(info);
 
-        if (type === "COLUMN") {
+        if (destination.droppableId === "delete") {
+            return setToDos((allBoards) => {
+                return {
+                    ...allBoards,
+                    [source.droppableId]: [
+                        ...allBoards[source.droppableId].slice(0, source.index),
+                        ...allBoards[source.droppableId].slice(source.index + 1),
+                    ],
+                };
+            });
         }
-
-        if (type === "DEFAULT") {
-            if (destination.droppableId === "delete") {
-                return setToDos((allBoards) => {
-                    return {
-                        ...allBoards,
-                        [source.droppableId]: [
-                            ...allBoards[source.droppableId].slice(0, source.index),
-                            ...allBoards[source.droppableId].slice(source.index + 1),
-                        ],
-                    };
-                });
-            }
 
             if (destination?.droppableId === source.droppableId) {
                 setToDos((allBoards) => {
@@ -78,29 +71,27 @@ function App() {
         }
     };
 
-    console.log(toDos);
-
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Wrapper>
                 <AddBoard />
-                {/* <Boards>
+                <Boards>
+                    {/* <Droppable droppableId="he">
+                        {(provided, snapshot) => (
+                            <>
+                                {Object.keys(toDos).map((boardId: string) => (
+                                    <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
+                                ))}
+                            </>
+                        )}
+                    </Droppable> */}
+
                     {Object.keys(toDos).map((boardId: string) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
+
                     <Trash />
-                </Boards> */}
-                <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-                    {(provided) => (
-                        <Boards ref={provided.innerRef} {...provided.droppableProps}>
-                            {Object.keys(toDos).map((boardId: string) => (
-                                <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
-                            ))}
-                            {provided.placeholder}
-                        </Boards>
-                    )}
-                </Droppable>
-                <Trash />
+                </Boards>
             </Wrapper>
         </DragDropContext>
     );
