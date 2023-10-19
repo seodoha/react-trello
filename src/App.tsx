@@ -77,6 +77,7 @@ function App() {
                     {Object.keys(toDos).map((boardId: string) => (
                         <Board toDos={toDos[boardId]} key={boardId} boardId={boardId} />
                     ))}
+                    1231231231231231231231
                     <Trash />
                 </Boards>
             </Wrapper>
